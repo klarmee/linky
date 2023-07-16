@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.7bc731eb.css","mappings":"AAAA,OACI,kCACJ,CAEA,EACI,SACJ,CAEA,UACI,UAAW,CACX,WACJ","sources":["index.css"],"sourcesContent":["*:focus {\n    background-color: rgba(122, 122, 122, .1);\n}\n\na {\n    all: unset;\n}\n\n#root>div {\n    margin: 1ch;\n    padding: 1ch;\n}"],"names":[],"sourceRoot":""}
