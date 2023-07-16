@@ -10,3 +10,9 @@ a {
     margin: 1ch;
     padding: 1ch;
 }
+
+.output {
+    position: fixed;
+    top:0;
+    right:0;
+}
