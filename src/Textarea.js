@@ -7,11 +7,9 @@ export default function Textarea() {
 
   useEffect(() => {
     window.addEventListener('load', init)
-    window.addEventListener('beforeunload', confirmExit);
     document.addEventListener('selectionchange', handleSelection);
     return () => {
       window.removeEventListener('load', init)
-      window.removeEventListener('beforeunload', confirmExit);
       document.removeEventListener('selectionchange', handleSelection);
     }
   }, [])
@@ -28,7 +26,7 @@ export default function Textarea() {
       {
         state.map((link, i) => {
           if (link.html) return (
-            <div dangerouslySetInnerHTML={{ __html: link.html }} id={link.id} data-index={i} key={i} spellCheck='false' className={'div ' + link.id} contentEditable='true' tabIndex='1' suppressContentEditableWarning={true} />
+            <div onFocus={(e) => placeCaretAtEnd(e.target)} dangerouslySetInnerHTML={{ __html: link.html }} id={link.id} data-index={i} key={i} spellCheck='false' className={'div ' + link.id} contentEditable='true' tabIndex='1' suppressContentEditableWarning={true} />
           )
           else return (
             <div id={link.id} data-index={i} key={i} spellCheck='false' className={'div ' + link.id} contentEditable='true' tabIndex='1' suppressContentEditableWarning={true}>
@@ -49,11 +47,11 @@ export default function Textarea() {
     loadFromStorage()
     initFocus()
   }
+
   function link(e) {
     if (e.ctrlKey && e.key === 'l') {
       var newId = selection.current.toString()
       let idExists = state.find(link => link.id == newId)
-      console.log(idExists)
       if (idExists == undefined && newId == encodeURIComponent(newId)) {
         replaceTextWithLink(newId)
         setState([...state, { id: newId }])
@@ -73,6 +71,7 @@ export default function Textarea() {
       window.localStorage.removeItem(id + '-style')
     }
   }
+
   function saveToStorage() {
     if (timeRef.current !== undefined) {
       clearTimeout(timeRef.current)
@@ -89,13 +88,12 @@ export default function Textarea() {
       200
     )
   };
-
   function loadFromStorage() {
     if (window.localStorage.getItem("state")) {
       setState(JSON.parse(window.localStorage.getItem("state")))
+      console.log(state);
       JSON.parse(window.localStorage.getItem("state")).map(link => {
         if (window.localStorage.getItem(link.id + "-style")) {
-          console.log(window.localStorage.getItem(link.id + "-style"));
           let style = document.createElement('style')
           style.innerHTML = window.localStorage.getItem(link.id + "-style")
           document.head.append(style)
@@ -103,15 +101,13 @@ export default function Textarea() {
       })
     }
   }
+  
   function initFocus() {
     setTimeout(function () {
       document.querySelectorAll('.div')[0].focus();
     }, 0);
   }
 
-  function confirmExit() {
-    return "exit?";
-  }
   function handleSelection() {
     const currentSelection = document.getSelection()
     if (currentSelection) {
